@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from bson.json_util import loads,dumps
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -21,6 +22,8 @@ current_key_index = 0
 def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
+    
+    CORS(app)
     
     from . import videosFetcher
     app.register_blueprint(videosFetcher.latest_videos)
@@ -44,13 +47,15 @@ def create_app(test_config=None):
         # sort = on descending order of publishing time
         # skip = skip all the entries in the db before the current page
         # limit = number of entries you want to fetch at a time
-        latest_videos= list(db['videos'].find(query).sort('publish_time').skip(skip).limit(per_page))
+        latest_videos= list(db['videos'].find(query).sort('publish_time' , -1).skip(skip).limit(per_page))
 
         for video in latest_videos:
             video['_id'] = str(video['_id'])
         
+        
+        number_of_entries = db['videos'].count_documents({})
             
-        return jsonify(loads(dumps(latest_videos)))
+        return jsonify({"videos":loads(dumps(latest_videos)) , "docs":number_of_entries })
         
     # fetches new videos every 10 seconds
     from . import videoScheduler

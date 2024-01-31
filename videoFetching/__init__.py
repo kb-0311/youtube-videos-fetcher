@@ -53,7 +53,7 @@ def create_app(test_config=None):
         return jsonify(loads(dumps(latest_videos)))
         
     # fetches new videos every 10 seconds
-    # from . import videoScheduler
-    # videoScheduler.fetch_latest_videos_periodically()
+    from . import videoScheduler
+    videoScheduler.fetch_latest_videos_periodically()
  
     return app

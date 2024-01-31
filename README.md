@@ -22,7 +22,7 @@ The project fulfills the following requirements :
 #### + Bonus requirement implemented
 - Added support for supplying multiple API keys so that if quota is exhausted on one, it automatically uses the next available key.Additionally it follows a round scheduling algo where a list of api keys can be used 
 for each new request in a circular manner (after last api key is used , the scheduling starts with the first one again)
-
+- Partially implemented : filtering of data , could not complete the frontend of the dashboard
 ## Usage
 
 ### Prerequisites

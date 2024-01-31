@@ -29,12 +29,12 @@ def create_app(test_config=None):
     app.register_blueprint(videosFetcher.latest_videos)
 
     
-    @app.route('/')
+    @app.route('/' , methods=['GET' , 'POST'] )
     def get_videos_paginated():
         
         request_data=request.get_json()
         
-        query = request_data.get('query') if request_data.get('query') is not None else {}
+        query =request_data.get('query' , dict({}))
         
         
         # Assuming 'page' is the query parameter for the page number

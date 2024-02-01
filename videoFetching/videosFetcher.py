@@ -32,6 +32,7 @@ def latest_youtube_videos():
             # fetches new videos at 10 seconds interval(== rate of refetching of videos defined in the background scheduler)
             publishedAfter= (datetime.now()-timedelta(seconds=10)).isoformat() + 'Z'
         ).execute()
+        
     except Exception as e:
         response = {
             'status_code': 500,

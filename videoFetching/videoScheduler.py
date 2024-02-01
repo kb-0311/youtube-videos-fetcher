@@ -1,7 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 from flask import Flask, abort
-from . import API_KEYS
 import time
 
 
@@ -24,11 +23,11 @@ def fetch_latest_videos_periodically():
             if response.status_code == 200:
                 print("Endpoint called successfully")
                 break
-            elif k == len(API_KEYS):
+            elif k == 3:
                 raise Exception("All API keys exhausted")
             else:
                 print("Error calling endpoint")
-                time.sleep(1)
+                time.sleep(2)
 
     # Add the cron job to the scheduler
     scheduler.add_job(call_video_fetcher, 'interval', seconds=10)  # Run every 10 seconds

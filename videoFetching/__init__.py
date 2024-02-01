@@ -15,7 +15,7 @@ db = client['youtube']
 
 # support for multiple API key, follows round scheduling algorithm
 # can contain more than 2 api keys
-API_KEYS = [os.getenv('API_KEY_1') , os.getenv('API_KEY_2') ,  os.getenv('API_KEY_3'),  os.getenv('API_KEY_4') ]
+API_KEYS = [os.getenv('API_KEY_1') , os.getenv('API_KEY_2') ,  os.getenv('API_KEY_3')]
 current_key_index = 0
 
 
@@ -27,6 +27,10 @@ def create_app(test_config=None):
     
     from . import videosFetcher
     app.register_blueprint(videosFetcher.latest_videos)
+    
+    # fetches new videos every 10 seconds
+    from . import videoScheduler
+    videoScheduler.fetch_latest_videos_periodically()
 
     
     @app.route('/' , methods=['GET' , 'POST'] )
@@ -54,11 +58,9 @@ def create_app(test_config=None):
         
         
         number_of_entries = db['videos'].count_documents({})
+        
             
         return jsonify({"videos":loads(dumps(latest_videos)) , "docs":number_of_entries })
  
     return app
 
-# fetches new videos every 10 seconds
-from . import videoScheduler
-videoScheduler.fetch_latest_videos_periodically()

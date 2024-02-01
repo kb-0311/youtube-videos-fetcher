@@ -44,6 +44,7 @@ Follow these steps to set up and run the project:
    ```
 2. **Setup Flask-API**
    ```bash
+   python3 -m venv .venv
    . .venv/bin/activate
    pip install -r requirements.txt
    ```

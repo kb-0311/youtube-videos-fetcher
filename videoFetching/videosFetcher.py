@@ -18,19 +18,27 @@ def latest_youtube_videos():
     YOUTUBE_API_VERSION = "v3"
     MAX_RESULTS = 10  # Number of videos to fetch
     
+    response = {}
     # To fetch cricket videos if nothing is provided in request
     query = request.args.get('query', default='cricket', type=str)  # Default query
-    
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=keyScheduling.get_next_key())
-    search_response = youtube.search().list(
-        q=query,
-        type="video",
-        order="date",
-        part="snippet",
-        maxResults=MAX_RESULTS,
-        # fetches new videos at 10 seconds interval(== rate of refetching of videos defined in the background scheduler)
-        publishedAfter= (datetime.now()-timedelta(seconds=10)).isoformat() + 'Z'
-    ).execute()
+    try: 
+        youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=keyScheduling.get_next_key())
+        search_response = youtube.search().list(
+            q=query,
+            type="video",
+            order="date",
+            part="snippet",
+            maxResults=MAX_RESULTS,
+            # fetches new videos at 10 seconds interval(== rate of refetching of videos defined in the background scheduler)
+            publishedAfter= (datetime.now()-timedelta(seconds=10)).isoformat() + 'Z'
+        ).execute()
+    except Exception as e:
+        response = {
+            'status_code': 500,
+            'message': "An unexpected error occurred: {}".format(str(e))
+        }
+        return jsonify(response), 500
+
 
     videos = []
     
